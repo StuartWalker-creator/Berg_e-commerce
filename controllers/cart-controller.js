@@ -11,12 +11,13 @@ const getCart = async (req, res) => {
 // POST /cart/add
 
 const addToCart =  async (req, res) => {
-  const { productId, size, color, quantity } = req.body;
+  const { productId,variant, quantity } = req.body;
 
   const product = await Product.findById(productId);
+  
   if (!product) return res.status(404).json({ error: 'Product not found' });
 
-  const selectedVariant = product.variants.find(v => v.size === size && v.color === color);
+  const selectedVariant = product.variants[variant]
   
   if (!selectedVariant) return res.status(400).json({ error: 'Variant not found' });
 
@@ -38,11 +39,7 @@ const addToCart =  async (req, res) => {
   } else {
     cart.items.push({
       productId,
-      variant: {
-        size,
-        color,
-        price: selectedVariant.price
-      },
+      variant: selectedVariant,
       quantity
     });
   }

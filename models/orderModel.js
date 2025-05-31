@@ -24,12 +24,16 @@ const OrderSchema = new mongoose.Schema({
   total: Number,
   shippingAddress: String,
   email: String,
+  phone: String,
+  deliveryOption: String,
   status: { type: String, enum: ['pending', 'shipped', 'delivered'], default: 'pending'},
   paymentStatus:{
     type:String,
-    enum:['pending','paid','failed']
+    enum:['pending','paid','failed'],
+    default: 'pending'
   },
   isGuest: Boolean,
+  tx_ref: String,
   createdAt: { type: Date, default: Date.now },
 });
 

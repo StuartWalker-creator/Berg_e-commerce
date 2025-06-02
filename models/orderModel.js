@@ -33,6 +33,10 @@ const OrderSchema = new mongoose.Schema({
     default: 'pending'
   },
   isGuest: Boolean,
+  isValid: {
+    type: Boolean,
+    default: false
+  },
   tx_ref: String,
   createdAt: { type: Date, default: Date.now },
 });

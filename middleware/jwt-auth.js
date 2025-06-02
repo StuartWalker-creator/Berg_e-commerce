@@ -6,7 +6,7 @@ const jwt_auth = async (req, res, next) => {
   
   const token = authHeader?.split(' ')[1];
   
-  if (!token) return res.status(401).json({ error: 'No token provided! Not verified.' });
+  if (!token) return res.status(401).json({ error: 'No token provided! Not verified.'});
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);

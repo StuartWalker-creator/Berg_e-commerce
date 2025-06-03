@@ -9,6 +9,7 @@ const ProductSchema = new mongoose.Schema({
   category: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }],
   tags: [String],
   stock: Number,
+  basePrice: Number,
   variants: [
     {
       size: String,

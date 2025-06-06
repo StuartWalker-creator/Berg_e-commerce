@@ -170,7 +170,7 @@ const getAllOrders = async (req,res,next) => {
     
   let query = {}
   
-    if (lastId) {
+    if (mongoose.Types.ObjectId.isValid(lastId)) {
     query = {
       _id:{$lt:lastId}
     }
@@ -193,12 +193,13 @@ const getAllOrders = async (req,res,next) => {
 
 const getAllUsers = async (req,res,next) => {
   const {lastId} = req.params
-  
+  console.log('start')
+  console.log(lastId)
   try {
     
   let query = {}
   
-    if (lastId) {
+    if (mongoose.Types.ObjectId.isValid(lastId)) {
     query = {
       _id:{$lt:lastId}
     }
@@ -214,6 +215,7 @@ const getAllUsers = async (req,res,next) => {
   console.log('users',users)
   res.status(200).json(users)
   } catch (e) {
+    console.log(e)
     res.status(500)
     return next(new Error('error occured: '+e))
   }

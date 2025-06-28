@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 const fs = require('fs/promises')
 const Product = require('../models/productModel.js')
 const User = require('../models/userModel.js')
@@ -10,21 +12,38 @@ const cloudinary = require('cloudinary').v2
     
 cloudinary.config({
   cloud_name:process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
+  api_key:process.env.API_KEY,
   api_secret:process.env.API_SECRET
 })
 
 const createProduct = async (req,res,next) => {
   console.log('here ww start')
   try {
-    let {title,description,stock,basePrice, variants} = req.body
-console.log(variants)
+    let {title,description, variants} = req.body
+
+cloudinary.config({
+  cloud_name:process.env.CLOUD_NAME,
+  api_key:process.env.API_KEY,
+  api_secret:process.env.API_SECRET
+})
+
+console.log(process.env.API_KEY)
+const basePrice = variants[0].price
+
+let stock = 0
+
+variants.forEach((variant)=>{
+  stock+=Number(variant.stock)
+}
+)
+
   variants = variants.map(variant => {
     variant.stock = Number(variant.stock)
     variant.price = Number(variant.price)
     
     return variant
   })
+  
   console.log(variants)
   const files = req.files;
 
@@ -38,7 +57,7 @@ console.log(variants)
   // Upload to Cloudinary and link to variant index
   const finalVariants = await Promise.all(
     variants.map(async (variant, index) => {
-      const fieldKey = `variantImages${index}`;
+      const fieldKey = `variants[${index}][images]`;
       const images = grouped[fieldKey] || [];
 
       const uploadedImages = await Promise.all(
@@ -46,7 +65,7 @@ console.log(variants)
           const res = await cloudinary.uploader.upload(file.path, {
             folder: 'products'
           });
-          fs.unlinkSync(file.path);
+          await fs.unlink(file.path);
           return res.secure_url;
         })
       );
@@ -55,14 +74,16 @@ console.log(variants)
     })
   );
 
-  const product = new ProductModel({
+  const product = new Product({
     title,
     description,
-    basePrice:Number(basePrice),
-    images: grouped.productImages || [],
-    stock:Number(stock),
+    basePrice:basePrice,
+    images: finalVariants[0].images || [],
+    stock:Number(stock) || stock,
     variants: finalVariants,
   });
+
+console.log('Product',product)
 
   await product.save();
   res.status(201).json(product);
@@ -176,7 +197,7 @@ const getAllOrders = async (req,res,next) => {
     }
   }
   
-  const orders = await Order.find({...query}).sort({_id:-1}).limit(10)
+  const orders = await Order.find({...query}).sort({_id:-1}).limit(10).populate('userId','name')
   
   if (!orders) {
     res.status(400)
@@ -186,6 +207,7 @@ const getAllOrders = async (req,res,next) => {
   console.log('orders',orders)
   res.status(200).json(orders)
   } catch (e) {
+    console.log(e)
     res.status(500)
     return next(new Error('error occured: '+e))
   }
@@ -283,7 +305,80 @@ const deleteUser = async (req,res,next) => {
     throw e
   }
 }
+const getProducts = async (req,res,next) => {
+  try {
+    
+    const {lastId} = req.params
+    
+    let query = {}
+    
+    if (mongoose.Types.ObjectId.isValid(lastId)) {
+      query={_id:{$lt: lastId}}
+    }
+   const products = await Product.find({...query}).sort({_id:-1}).limit(10)
+   
+   console.log('gotten products pro',products)
+   
+   res.status(200).json(products)
+  } catch (e) {
+    console.log(e)
+    throw e
+  }
+}
 
+const getOrders  = async (req,res,next) => {
+    try {
+   const orders = await Order.find()
+   
+   res.status(200).json(orders)
+  } catch (e) {
+    throw e
+  }
+}
+
+const login = async (req,res,next)=>{
+  try {
+  const {password,email} = req.body
+  
+  if (!password || !email) {
+    res.status(400)
+    return next(new Error('All fields are mandatory!'))
+  }
+  
+  const user = await User.findOne({email})
+  
+  if (!user) {
+    res.status(404)
+    return next(new Error('No user found'))
+    
+  }
+  
+  console.log('password',password)
+  
+ let isMatch = await bcrypt.compare(password,user.password)
+  
+  if (!isMatch) {
+    res.status(404)
+    return next(new Error('User not authorized, check password and try again!'))
+  }
+  
+  let authorizedRoles = [
+    'admin','owner'
+  ]
+if (!(authorizedRoles.includes(user.role))) {
+  res.status(404)
+  return next(new Error('User not authorized'))
+}
+
+const token = jwt.sign({id:user._id,role:user.role},process.env.JWT_SECRET,{expiresIn:'30d'})
+
+console.log('adminToken',token)
+
+res.status(200).json({user,token})
+  } catch (e) {
+    throw e
+  }
+}
 module.exports = {
   createProduct,
   updateProduct,
@@ -293,5 +388,8 @@ module.exports = {
   updateStatus,
   getAllUsers,
   promoteUser,
-  deleteUser
+  deleteUser,
+  getProducts,
+  getOrders,
+  login
 }

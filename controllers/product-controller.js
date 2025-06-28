@@ -5,22 +5,29 @@ const Catalog = require('../models/CatalogModel.js')
 
 const getProducts = async (req,res,next) => {
   try {
-    let {lastId} = req.query
-    const limit = req.query.limit
+    console.log('initial')
+    let {lastId} = req.params
+    const limit = 10
     
-    let idQuery = lastId ? {_id:{$lt:lastId}} : {}
-    
-    const products = await Product.find({...idQuery}).sort({_id:-1}).limit(Number(limit)).populate('ratings.user','name email profilePictureURL')
+    console.log('first')
+    let idQuery = mongoose.Types.ObjectId.isValid(lastId)? {_id:{$lt:lastId}} : {}
+    console.log('second')
+    const products = await Product.find({...idQuery}).sort({_id:-1}).limit(limit).populate('ratings.user','name email profilePictureURL')
     .populate('category','name description')
     
+    console.log('third')
+    console.log(products)
     if (products.length == 0) {
-      res.status(204)
-      return next(new Error('No products found'))
+      return res.status(204).json(products)
+      
     }
     
     res.status(200).json(products)
     
+    console.log('Products',products)
+    
   } catch (e) {
+console.log(e)
     res.status(500)
     throw e
   }
@@ -143,17 +150,20 @@ const searchProducts = async (req, res) => {
 };
 
 const getCatalogs = async (req,res,next) => {
+  console.log('were getting catalogs')
   try {
     const catalogs = await Catalog.find()
     
+    console.log('catalogs',catalogs)
+    let status = 200
     if (catalogs.length==0) {
-      res.status(204)
-      return next(new Error('No catalogs found'))
+     status = 204
     }
     
-    res.status(200).json(catalogs)
+    res.status(status).json(catalogs)
     
   } catch (e) {
+    console.log(e)
     res.status(500)
     throw e
   }

@@ -6,9 +6,14 @@ const jwt_auth = require('../middleware/jwt-auth.js')
 const authorize = require('../middleware/authorize.js')
 const upload = multer({ dest: 'temp/' });
 
-const {createProduct,updateProduct,deleteProduct,makeFeatured,getAllOrders,updateStatus,getAllUsers,promoteUser,deleteUser} = require('../controllers/adminController.js')
+const {createProduct,updateProduct,deleteProduct,makeFeatured,getAllOrders,updateStatus,getAllUsers,promoteUser,deleteUser,getProducts,getOrders,login} = require('../controllers/adminController.js')
 
-router.post('/products',jwt_auth,authorize('owner','admin'),upload.any(),createProduct)
+router.post('/login',login)
+
+router.post('/products/create',jwt_auth,authorize('owner','admin'),upload.any(),createProduct)
+
+router.get('/products/get/:lastId',jwt_auth,authorize('owner','admin'),getProducts)
+router.get('/orders/get',jwt_auth,authorize('owner','admin'),getOrders)
 
 router.put('/products/:id',jwt_auth,authorize('owner','admin'),upload.any(),updateProduct)
 
@@ -25,6 +30,5 @@ router.get('/users/get/:lastId',jwt_auth,authorize('owner','admin'),getAllUsers)
 router.put('/users/:id/promote',jwt_auth,authorize('owner'),promoteUser)
 
 router.delete('/users/:id/delete',jwt_auth,authorize('owner'),deleteUser)
-
 
 module.exports = router

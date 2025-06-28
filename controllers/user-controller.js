@@ -127,10 +127,44 @@ res.json(user.preferences.searchHistory || [])
   }
 }
 
+const verifyToken = async (req,res,next) => {
+  try {
+    let {role} = req.params
+    const {token} = req.body
+    
+    if (!role) {
+      res.status(400)
+      return next(new Error('Please include your role'))
+    }
+    
+    const decoded = jwt.verify(token,process.env.JWT_SECRET)
+    
+    console.log(decoded)
+    
+    const user = await User.findById(decoded.id)
+    
+    if (role=='admin') {
+      user.role=='admin'
+    }
+    
+    if (user.role!==role) {
+      return res.status(404).json({
+        valid:false
+      })
+    }
+    
+    res.status(200).json({
+      valid:true,user
+    })
+  } catch (e) {
+    throw e
+  }
+}
 module.exports = {
   createUser,
   login,
   fetchSingleUser,
   fetchUsers,
-  getSearchHistory
+  getSearchHistory,
+  verifyToken
 }

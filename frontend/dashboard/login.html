@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+<link rel="stylesheet" href="styles/shared/popup.css" type="text/css" media="all" />
+<style>
+  .login{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  input{
+    display: block;
+    border: 2px solid goldenrod;
+    border-radius: 5px;
+    margin-top:12px;
+    padding:5px;
+    font-size:1.1rem;
+    
+  }
+  .login-form{
+    border: 1px solid gray;
+    border-radius:5px;
+    padding:20px 10px;
+    box-shadow: 0px 0px 6px #898D85;
+    margin-top: 30px;
+  }
+  button{
+    max-width: 80px;
+    margin:5px auto;
+    display:flex;
+    justify-content: center;
+    border: 2px dashed #5377C8;
+    background:#7EE6AE;
+    border-radius: 25px;
+    padding:5px;
+    cursor: pointer;
+  }
+  button:hover{
+    background:#80EDB9;
+    opacity: 0.6;
+  }
+</style>
+<body>
+  <div class="login">
+    <form class="login-form" action="" method="POST" accept-charset="utf-8">
+       <input class="email" type="text" name="email" id="" value=""  placeholder="Email"/>
+    <input class="password" type="password" name="password" id="" value=""  placeholder="password"/>
+    
+    <button type="submit">Login</button>
+    </form>
+   
+  </div>
+  
+  <script type="module">
+  import popup from './utils/popup.js'
+  
+    const form = document.querySelector('.login-form')
+    
+    form.addEventListener('submit',async (e)=>{
+      e.preventDefault()
+      
+      const email = document.querySelector('.email').value
+      const password = document.querySelector('.password').value
+      try{
+      const res = await fetch('http://localhost:4000/api/admin/login',{
+        method:'POST',
+        headers:{
+          "Content-Type":'application/json'
+        },
+        body:JSON.stringify({
+          email,
+          password
+        }
+        )
+      })
+      
+      if (res.ok) {
+        const info = await res.json()
+        
+        localStorage.setItem('token',info.token)
+        popup('logged in successfully!',"success")
+        window.location.href='index.html'
+      }
+      else{
+        const error = await res.json()
+        popup(error.error,'error')
+      }}
+      catch(e){
+        popup('No internet connection!')
+      }
+    }
+    )
+    
+  </script>
+</body>
+
+</html>

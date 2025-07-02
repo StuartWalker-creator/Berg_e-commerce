@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>admin-dashboard</title>
+</head>
+<link rel="stylesheet" href="style.css" type="text/css" media="all" />
+<link rel="stylesheet" href="styles/shared/popup.css" type="text/css" media="all" />
+<body>
+  <div class="page">
+    <section class="sidebar">
+      <div class="home">
+        <img sizes="" srcset="" src="images/home.jpeg" alt="">
+        <span class="admin-text">Admin</span>
+      </div>
+      <div class="navigation-links">
+        <li>
+          <a href="#">Dashboard</a>
+        </li>
+        <li>
+          <a href="#">Products</a>
+        </li>
+        <li>
+          <a href="#">Orders</a>
+        </li>
+        <li>
+          <a href="#">Add Products</a>
+        </li>
+        <li>
+          <a href="#">Customers</a>
+        </li>
+      </div>
+      <div class="logout">
+        LOGOUT 
+      </div>
+    </section>
+    <section class="navbar">
+      <div class="right-section">
+        <div class="hamburger">
+          <img class="hamburger-icon" sizes="" srcset="" src="images/hamburger.png" alt="hamburger icon">
+        </div>
+        <a href="#"><div class="home-logo">
+                  <img class="home-image" sizes="" srcset="" src="images/home.jpeg" alt="home-logo">
+        
+        <span class="admin-text">Admin</span>
+        </div></a>
+
+      </div>
+      
+      <div class="left-section">
+        <li><a href="#">Orders</a></li>
+        <li><a href="#">Products</a></li>
+      </div>
+      
+      <aside class="nav-menu" id="navMenu">
+        <li>
+          <a href="#">Add products</a>
+        </li>
+        <li>
+          <a href="#">Customers</a>
+        </li>
+        <div class="logout">
+          LOGOUT
+        </div>
+      </aside>
+    </section>
+    
+    <section class="main">
+      <div class="utilities">
+        <aside class="utility products">
+          <img sizes="" srcset="" src="images/products.png" alt="">
+          <div class="info">
+            <div>Products</div>
+            <div class="count products-count">0</div>
+          </div>
+        </aside>
+                <aside class="utility orders">
+          <img sizes="" srcset="" src="images/orders.png" alt="">
+          <div class="info">
+            <div>Orders</div>
+            <div class="count orders-count">0</div>
+          </div>
+        </aside>
+            <div class="add-products-desk">
+          <img sizes="" srcset="" src="images/add-product.png" alt="">
+          Add Product
+        </div>
+
+        
+      </div>
+              <div class="add-products-div">
+          <img sizes="" srcset="" src="images/add-product.png" alt="">
+          Add Product
+        </div>
+        
+        <div class="tables-grid">
+          <div class="products-table">
+            <div class="products-head">
+              <span class="intro">Products</span>
+              <input type="text" name="" id="" value="" placeholder="Search" />
+            </div>
+    <table class="" border="0">
+       <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Title</th>
+                  <th>Stock</th>
+                  <th>variants</th>
+                  <th>Price</th>
+                </tr>
+              </thead>
+              <tbody class="products-tbody">
+              </tbody>
+            </table>
+            
+          </div>
+        <div class="products-table">
+            <div class="products-head">
+              <span class="intro">Recent Orders</span>
+              <input type="text" name="" id="" value="" placeholder="Search" />
+            </div>
+    <table class="" border="0">
+       <thead>
+                <tr>
+                  <th>Customer</th>
+                  <th>Status</th>
+                  <th>Payment</th>
+                </tr>
+              </thead>
+              <tbody class="orders-tbody">
+              </tbody>
+            </table>
+            <div id="loader" class="loader hidden"></div>
+
+          </div>
+
+        </div>
+
+    </section>
+  </div>
+  
+<script>
+const hamburger = document.querySelector('.hamburger-icon')
+const navMenu = document.querySelector('.nav-menu')
+hamburger.addEventListener('click',(e)=>{
+  navMenu.classList.toggle('active')
+})
+
+window.onclick = function(event) {
+    const dropdownMenu = document.getElementById("navMenu");
+    const menuButton = document.querySelector(".hamburger-icon");
+    
+    if (!menuButton.contains(event.target) && !dropdownMenu.contains(event.target) && dropdownMenu.classList.contains('active')) {
+        dropdownMenu.classList.toggle('active');
+    }
+};
+
+let startX = 0;
+let currentX = 0;
+
+document.addEventListener('touchstart', function(e) {
+  startX = e.touches[0].clientX;
+}, false);
+
+document.addEventListener('touchmove', function(e) {
+  const dropdownMenu = document.getElementById("navMenu");
+  const menuButton = document.querySelector(".hamburger");
+  
+  currentX = e.touches[0].clientX;
+
+  let diffX = currentX - startX;
+
+  if (Math.abs(diffX) > 50) {
+    if (diffX > 0) {
+    } else {
+      if (dropdownMenu.classList.contains('active')) {
+  dropdownMenu.classList.toggle('active');
+}
+    }
+  }
+}, false);
+
+document.addEventListener('touchend', function() {
+  startX = 0;
+  currentX = 0;
+}, false);
+
+  </script>
+  <script>
+function showLoader() {
+  document.getElementById('loader').classList.remove('hidden');
+}
+
+function hideLoader() {
+  document.getElementById('loader').classList.add('hidden');
+}
+  </script>
+<script src="script.js" type="module" charset="utf-8"></script>
+</body>
+
+</html>

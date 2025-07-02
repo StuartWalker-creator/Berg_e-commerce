@@ -330,7 +330,9 @@ const getOrders  = async (req,res,next) => {
     try {
    const orders = await Order.find()
    
-   res.status(200).json(orders)
+   res.status(200).json({
+     quantity:orders.length
+   })
   } catch (e) {
     throw e
   }
@@ -379,6 +381,19 @@ res.status(200).json({user,token})
     throw e
   }
 }
+const getAllProducts = async (req,res,next) => {
+  try {
+    const products = await Product.find()
+    
+    const productsLength = products.length
+    
+    res.status(200).json({
+      quantity:productsLength
+    })
+  } catch (e) {
+    throw e
+  }
+}
 module.exports = {
   createProduct,
   updateProduct,
@@ -391,5 +406,6 @@ module.exports = {
   deleteUser,
   getProducts,
   getOrders,
-  login
+  login,
+  getAllProducts
 }

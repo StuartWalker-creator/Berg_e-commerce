@@ -128,8 +128,9 @@ res.json(user.preferences.searchHistory || [])
 }
 
 const verifyToken = async (req,res,next) => {
+  console.log('verifying')
   try {
-    let {role} = req.params
+    let {role} = req.query
     const {token} = req.body
     
     if (!role) {
@@ -142,21 +143,22 @@ const verifyToken = async (req,res,next) => {
     console.log(decoded)
     
     const user = await User.findById(decoded.id)
-    
+        console.log(user)
+console.log('role',role)
     if (role=='admin') {
-      user.role=='admin'
-    }
-    
-    if (user.role!==role) {
-      return res.status(404).json({
+    console.log('user role',user.role)
+    if (user.role!='admin' && user.role!='owner') {
+      return res.status(401).json({
         valid:false
       })
+    }
     }
     
     res.status(200).json({
       valid:true,user
     })
   } catch (e) {
+    console.log(e)
     throw e
   }
 }

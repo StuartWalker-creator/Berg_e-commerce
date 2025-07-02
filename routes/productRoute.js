@@ -21,7 +21,7 @@ productRouter.get('/categories/:id',getProductsByCategory)
 productRouter.get('/featured',getFeaturedProducts)
 productRouter.get('/autocomplete',autoComplete)
 productRouter.get('/search/:lastId',searchProducts)
-productRouter.get('/catalogs',getCatalogs)
+productRouter.get('/catalogs/:lastId',getCatalogs)
 productRouter.get('/catalogs/:catalogId',getProductsByCatalog)
 productRouter.get('/rate/:productId',jwt_auth,rateProduct)
 

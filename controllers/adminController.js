@@ -394,6 +394,9 @@ const getAllProducts = async (req,res,next) => {
     throw e
   }
 }
+const getCatalogs = async (req,res,next) => {
+  
+}
 module.exports = {
   createProduct,
   updateProduct,
@@ -407,5 +410,6 @@ module.exports = {
   getProducts,
   getOrders,
   login,
-  getAllProducts
+  getAllProducts,
+  getCatalogs
 }

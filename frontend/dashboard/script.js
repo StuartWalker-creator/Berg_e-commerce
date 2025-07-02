@@ -25,8 +25,8 @@ function evaluateData(holder,data,fields) {
     tr.setAttribute('data-id',prop._id)
    let html = ''
      fields.forEach((field)=>{
-        html+=`
-        <td>${field=="image"?`<img class="field-image" src="${prop.images[0]}"/>`:field=='variants'?`${prop.variants?.length || 0}`:field=="name"?`${prop.userId.name}`:`${prop[field]}`}</td>
+     html+=`
+  <td>${field=="image"?`<img class="field-image" src="${prop.images[0]}"/>`:field=='variants'?`${prop.variants?.length || 0}`:field=="name"?`${prop.userId.name || prop.name}`:`${prop[field]}`}</td>
         `
       })
 
@@ -46,9 +46,7 @@ tbody.appendChild(tr)
 async function fetchData(url,holder) {
   showLoader()
   const lastId = localStorage.getItem(`${holder}-lastId`) || "null"
-    
-   console.log("lastid",lastId)
-      try {
+          try {
         const res = await fetch(`${url}/${lastId}`,{
           method:"GET",
           headers:{
@@ -58,10 +56,9 @@ async function fetchData(url,holder) {
         });
      if(res.ok){
       const data = await res.json();
-     console.log("data",data)
      
      const queries = holder=='products'? ['image','title','stock','variants','basePrice']
-     : holder=='orders'?['name','status','paymentStatus']:[]
+     : holder=='orders'?['name','status','paymentStatus']:['name','active']
     evaluateData(holder,data, queries)
     if(data.length>0){
         let newLastId  = data[data.length-1]._id
@@ -99,5 +96,6 @@ document.addEventListener('DOMContentLoaded',async()=>{
   
   fetchData('http://localhost:4000/api/admin/products/get','products')
   fetchData('http://localhost:4000/api/admin/orders/get','orders')
+  fetchData('http://localhost:4000/api/products/catalogs','catalogs')
 }
 )

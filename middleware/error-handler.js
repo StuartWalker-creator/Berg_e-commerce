@@ -24,7 +24,7 @@ const errorHandler = async (err,req,res,next) => {
   else{
     res.status(500)
     res.json({
-      error:'Server error'
+      error:'Server error'+err.message
     })
   }
 }

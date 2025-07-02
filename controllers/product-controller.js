@@ -157,7 +157,7 @@ const getCatalogs = async (req,res,next) => {
     console.log('catalogs',catalogs)
     let status = 200
     if (catalogs.length==0) {
-     status = 204
+     status = 200
     }
     
     res.status(status).json(catalogs)

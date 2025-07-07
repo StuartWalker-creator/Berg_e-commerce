@@ -397,6 +397,43 @@ const getAllProducts = async (req,res,next) => {
 const getCatalogs = async (req,res,next) => {
   
 }
+const updateProductVariant = async (req,res,next) => {
+  
+  const { productId, index } = req.params;
+  const { price, stock, color, size } = req.body;
+  
+  cloudinary.config({
+  cloud_name:process.env.CLOUD_NAME,
+  api_key:process.env.API_KEY,
+  api_secret:process.env.API_SECRET
+})
+
+
+  const product = await Product.findById(productId);
+  if (!product) return res.status(404).json({ message: "Product not found" });
+
+  const variant = product.variants[index];
+  if (!variant) return res.status(404).json({ message: "Variant not found" });
+
+  variant.price = price;
+  variant.stock = stock;
+  if (color) variant.color = color;
+  if (size) variant.size = size;
+
+  if (req.files && req.files.length > 0) {
+    variant.images = req.files.map(async file => {
+      const res = await cloudinary.uploader.upload(file.path, {
+        folder: 'products-variants'
+          });
+    await fs.unlink(file.path);
+    return res.secure_url;
+      
+    });
+  }
+
+  await product.save();
+  res.json(product);
+}
 module.exports = {
   createProduct,
   updateProduct,
@@ -411,5 +448,6 @@ module.exports = {
   getOrders,
   login,
   getAllProducts,
-  getCatalogs
+  getCatalogs,
+  updateProductVariant
 }

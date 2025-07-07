@@ -148,7 +148,7 @@ productForm.addEventListener("submit", async (e) => {
 
   try {
     const token = localStorage.getItem("token");
-    const res = await fetch("/api/admin/products/create", {
+    const res = await fetch("http://localhost:4000/api/admin/products/create", {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
       body: formData,

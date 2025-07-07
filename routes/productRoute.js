@@ -15,7 +15,7 @@ const {
  const jwt_auth = require('../middleware/jwt-auth.js')
  
 productRouter.get('/:lastId',getProducts)
-productRouter.get('/:id',getSingleProduct)
+productRouter.get('/single/:id',getSingleProduct)
 productRouter.get('/categories',getCategories)
 productRouter.get('/categories/:id',getProductsByCategory)
 productRouter.get('/featured',getFeaturedProducts)

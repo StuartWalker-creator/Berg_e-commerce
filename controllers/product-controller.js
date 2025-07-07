@@ -41,13 +41,15 @@ const getSingleProduct = async (req,res,next) => {
       return next(new Error('No id provided'))
     }
     
-    const product = await Product.findById(productId)
+    const product = await Product.findOne({_id:productId})
     
     if (!product) {
       res.status(204)
       return next(new Error('No product found'))
     }
+    console.log('product',product)
     res.status(200).json(product)
+    
   } catch (e) {
     throw e
   }

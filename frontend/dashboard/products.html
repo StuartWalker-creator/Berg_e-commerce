@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+<link rel="stylesheet" href="style.css" type="text/css" media="all" />
+<link rel="stylesheet" href="styles/shared/popup.css" type="text/css" media="all" />
+
+<body>
+ <div class="page">
+      
+  <section class="sidebar">
+      <div class="home">
+        <img sizes="" srcset="" src="images/home.jpeg" alt="">
+        <span class="admin-text">Admin</span>
+      </div>
+      <div class="navigation-links">
+        <li>
+          <a href="index.html">Dashboard</a>
+        </li>
+        <li>
+          <a href="/products.html">Products</a>
+        </li>
+        <li>
+          <a href="/orders.html">Orders</a>
+        </li>
+        <li>
+          <a href="addproduct.html">Add Products</a>
+        </li>
+        <li>
+          <a href="#">Customers</a>
+        </li>
+      </div>
+      <div class="logout">
+        LOGOUT 
+      </div>
+    </section>
+    
+  <section class="navbar">
+      <div class="right-section">
+        <div class="hamburger">
+          <img class="hamburger-icon" sizes="" srcset="" src="images/hamburger.png" alt="hamburger icon">
+        </div>
+        <a href="#"><div class="home-logo">
+                  <img class="home-image" sizes="" srcset="" src="images/home.jpeg" alt="home-logo">
+        
+        <span class="admin-text">Admin</span>
+        </div></a>
+
+      </div>
+      
+    <div class="left-section">
+        <li><a href="#">Orders</a></li>
+        <li><a href="#">Products</a></li>
+      </div>
+      
+    <aside class="nav-menu" id="navMenu">
+        <li>
+          <a href="addproduct.html">Add products</a>
+        </li>
+        <li>
+          <a href="#">Customers</a>
+        </li>
+        <div class="logout">
+          LOGOUT
+        </div>
+      </aside>
+  </section>
+    
+  <section class="main">
+    <div class="utilities">
+        <aside class="utility products">
+          <img sizes="" srcset="" src="images/products.png" alt="">
+          <div class="info">
+            <div>Products</div>
+            <div class="count products-count">0</div>
+          </div>
+        </aside>
+
+        <a href="addproduct.html">
+                      <div class="add-products-desk">
+          <img sizes="" srcset="" src="images/add-product.png" alt="">
+          Add Product
+        </div>
+
+        </a>
+
+      
+    </div>
+              
+    <a href="addproduct.html">              <div class="add-products-div">
+          <img sizes="" srcset="" src="images/add-product.png" alt="">
+          Add Product
+        </div>
+        
+    </a>
+
+   <div class="products-table">
+            <div class="products-head">
+              <span class="intro">Products</span>
+              <input type="text" name="" id="" value="" placeholder="Search" />
+            </div>
+    <table class="" border="0">
+       <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Title</th>
+                  <th>Stock</th>
+                  <th>variants</th>
+                  <th>Price</th>
+                </tr>
+              </thead>
+              <tbody class="products-tbody">
+              </tbody>
+            </table>
+                <div id="loader" class="loader hidden"></div>
+          
+   </div>
+  </section>
+  </div>
+  
+  <button class="loadmore-btn btn btn-primary" >Load More</button>
+  
+  <script>
+function showLoader() {
+  document.getElementById('loader').classList.remove('hidden');
+}
+
+function hideLoader() {
+  document.getElementById('loader').classList.add('hidden');
+}
+  </script>
+
+  <script src="script.js" type="module" charset="utf-8"></script>
+</body>
+
+</html>

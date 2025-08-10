@@ -398,6 +398,7 @@ const getCatalogs = async (req,res,next) => {
   
 }
 const updateProductVariant = async (req,res,next) => {
+  console.log('I am updating the values of the variants')
   
   const { productId, index } = req.params;
   const { price, stock, color, size } = req.body;
@@ -420,17 +421,18 @@ const updateProductVariant = async (req,res,next) => {
   if (color) variant.color = color;
   if (size) variant.size = size;
 
-  if (req.files && req.files.length > 0) {
-    variant.images = req.files.map(async file => {
-      const res = await cloudinary.uploader.upload(file.path, {
-        folder: 'products-variants'
-          });
+if (req.files && req.files.length > 0) {
+  console.log('files',req.files)
+  const imageUploadPromises = req.files.map(async file => {
+    const res = await cloudinary.uploader.upload(file.path, {
+      folder: 'products-variants'
+    });
     await fs.unlink(file.path);
     return res.secure_url;
-      
-    });
-  }
+  });
 
+  variant.images = await Promise.all(imageUploadPromises);
+}
   await product.save();
   res.json(product);
 }

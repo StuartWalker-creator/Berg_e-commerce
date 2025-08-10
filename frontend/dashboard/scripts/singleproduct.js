@@ -2,7 +2,7 @@ import popup from '../utils/popup.js';
 
 let currentProduct = null;
 
-function openEditModal(index) {
+window.openEditModal = function (index) {
   const variant = currentProduct.variants[index];
   document.getElementById("variantIndex").value = index;
   document.getElementById("editPrice").value = variant.price;
@@ -22,10 +22,11 @@ document.getElementById("editVariantForm").addEventListener("submit", async (e) 
   formData.append("size", document.getElementById("editSize").value);
 
   const imageFiles = document.getElementById("editImages").files;
+  console.log('imageFiles',imageFiles[0])
   for (let i = 0; i < imageFiles.length; i++) {
     formData.append("images", imageFiles[i]);
   }
-
+console.log('formimage',formData.get('images'))
   try {
     const res = await fetch(`http://localhost:4000/api/admin/products/${currentProduct._id}/variants/${index}`, {
       method: "PUT",
